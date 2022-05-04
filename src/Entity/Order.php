@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: OrderRepository::class)]
 #[ORM\Table(name: 't_panier')]
 #[ApiResource(
-    collectionOperations: [],
+    collectionOperations: ['get'],
     itemOperations: [
     'get',
     'patch' => [

@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Table(name: 't_assoc')]
 #[ApiResource(
     collectionOperations: ['get'],
-    itemOperations: []
+    itemOperations: ['get'],
 )]
 class Association
 {
