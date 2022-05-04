@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\ProductRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\NotNull;
@@ -27,6 +29,17 @@ class Product
     #[NotNull]
     #[PositiveOrZero]
     private float $sellPrice = 0.;
+
+    #[ORM\OneToMany(mappedBy: 'product', targetEntity: 'StockEntry')]
+    private $stockEntry;
+
+    #[ORM\OneToMany(mappedBy: 'product', targetEntity: 'DepositEntry')]
+    private $depositEntry;
+
+    public function __construct() {
+        $this->stockEntry   = new ArrayCollection();
+        $this->depositEntry = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -55,5 +68,15 @@ class Product
         $this->sellPrice = $sellPrice;
 
         return $this;
+    }
+
+    public function getStockEntry(): Collection
+    {
+        return $this->stockEntry;
+    }
+
+    public function getDepositEntry(): Collection
+    {
+        return $this->depositEntry;
     }
 }

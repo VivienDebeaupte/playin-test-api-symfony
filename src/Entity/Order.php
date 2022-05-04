@@ -3,12 +3,26 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
+use App\Controller\Api\OrderSetValidateController;
 use App\Repository\OrderRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+
 
 #[ORM\Entity(repositoryClass: OrderRepository::class)]
 #[ORM\Table(name: 't_panier')]
-#[ApiResource]
+#[ApiResource(
+    collectionOperations: [],
+    itemOperations: [
+    'get',
+    'patch' => [
+        'controller' => OrderSetValidateController::class,
+    ],
+    'put' => [
+        'controller' => OrderSetValidateController::class,
+    ]
+])]
 class Order
 {
     #[ORM\Id]
@@ -18,6 +32,13 @@ class Order
 
     #[ORM\Column(name: 'valide', type: 'boolean')]
     private bool $validated = false;
+
+    #[ORM\OneToMany(mappedBy: 'order', targetEntity: 'OrderEntry')]
+    private $orderEntry;
+
+    public function __construct() {
+        $this->orderEntry = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -33,5 +54,10 @@ class Order
     {
         $this->validated = $validated;
         return $this;
+    }
+
+    public function getOrderEntry(): Collection
+    {
+        return $this->orderEntry;
     }
 }
